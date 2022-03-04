@@ -2,8 +2,14 @@ def render():
     global board
     for y in board:
         for x in y:
-            print(x, end=" ")
+            if x == 1:
+                print("\u001b[31mX\u001b[0m", end=" ")
+            elif x == -1:
+                print("\u001b[33mO\u001b[0m", end=" ")
+            else:
+                print("-", end=" ")
         print()
+    print("0 1 2 3 4 5 6")
 
 
 def move(move: int, player: int) -> int:
@@ -12,9 +18,9 @@ def move(move: int, player: int) -> int:
     print("options", options)
     movey = options.index(0)
     print("movey", movey)
-    spot = 0
+    spot = 5
     while board[spot][move] != 0:
-        spot += 1
+        spot -= 1
     board[spot][move] = player
     return spot
 
@@ -46,45 +52,50 @@ def check_win_move(movex: int, movey: int, player: int) -> bool:
     counter = 0
     #horizontal win
     for x in range(movex-3,movex+4):
-        spot = board[movex][movey]
-        try:
-            spot = board[movex][movey]
-        except IndexError:
-            pass
-        if board[movey][x] == player:
-            counter += 1
-        else:
-            counter = 0
+        if x in range(7):
+            spot = board[movey][x]
+            if spot == player:
+                counter += 1
+            else:
+                counter = 0
         if counter > 3:
             return True
     #vertical win
+    counter = 0
     for y in range(movey-3,movey+4):
-        if board[y][movex] == player:
-            counter += 1
-        else:
-            counter = 0
+        if y in range(6):
+            spot = board[y][movex]
+            if spot == player:
+                counter += 1
+            else:
+                counter = 0
         if counter > 3:
             return True
     #diagonal 1 down
+    counter = 0
     y = movey-3
     for x in range(movex-3,movex+4):
-        if board[x][y] == player:
-            counter += 1
-        else:
-            counter = 0
+        if x in range(7) and y in range(6):
+            spot = board[y][x]
+            if spot == player:
+                counter += 1
+            else:
+                counter = 0
         if counter > 3:
             return True
-    y += 1
+        y += 1
     #diagonal 2 up
-    y = movey-3
-    for x in range(movex-3,movex+4):
-        if board[x][y] == player:
-            counter += 1
-        else:
-            counter = 0
+    counter = 0
+    y = movey+3
+    for x in range(movex-3,movex+4): # change movey to x
+        if x in range(7) and y in range(6):
+            spot = board[y][x]
+            if spot == player:
+                counter += 1
         if counter > 3:
             return True
-    y += 1
+        y -= 1
+    return False
     
 board = [[0] * 7 for i in range(6)]
 
@@ -92,9 +103,9 @@ play = True
 player = 1
 
 while play:
-    movecol = int(input("column"))
-    render()
+    print("P: X") if player == 1 else print("P: O")
+    movecol = int(input("column: "))
     y = move(movecol, player)
-    render(board)
-    print(check_win_move(player))
+    render()
+    print(check_win_move(movecol, y, player))
     player *= -1
