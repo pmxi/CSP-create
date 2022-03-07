@@ -122,7 +122,10 @@ reset = "\u001b[0m"
 while play:
     print(f"Player: {player_text(player)}")
     render_board()
-    movecol = int(input("column: "))
+    movecol = input("column: ")
+    while not (movecol.isdecimal() and int(movecol) in range(7)):
+        movecol = input("column: ")
+    movecol = int(movecol)
     y = move(movecol, player)
     if check_win_move(movecol, y, player):
         break
