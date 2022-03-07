@@ -1,23 +1,29 @@
-def render():
+def render_board():
     global board
     for y in board:
         for x in y:
-            if x == 1:
-                print("\u001b[31mX\u001b[0m", end=" ")
-            elif x == -1:
-                print("\u001b[33mO\u001b[0m", end=" ")
+            if x == 1 or x == -1:
+                print(player_text(x), end=" ")
             else:
                 print("-", end=" ")
         print()
     print("0 1 2 3 4 5 6")
+    
+def render_text(text):
+    print("\n"* 3, end="")
+    print(text)
+    print("\n"* 3, end="")
 
+def player_text(player_num: int) -> str:
+    if player_num == 1:
+        return f"{red}X{reset}"
+    elif player_num == -1:
+        return f"{yellow}O{reset}"
 
 def move(move: int, player: int) -> int:
     global board
     options = [x[move] for x in board]
-    print("options", options)
     movey = options.index(0)
-    print("movey", movey)
     spot = 5
     while board[spot][move] != 0:
         spot -= 1
@@ -102,10 +108,24 @@ board = [[0] * 7 for i in range(6)]
 play = True
 player = 1
 
+# colors
+black = "\u001b[30m"
+red = "\u001b[31m"
+green = "\u001b[32m"
+yellow = "\u001b[33m"
+blue = "\u001b[34m"
+magenta = "\u001b[35m"
+cyan = "\u001b[36m"
+white = "\u001b[37m"
+reset = "\u001b[0m"
+
 while play:
-    print("P: X") if player == 1 else print("P: O")
+    print(f"Player: {player_text(player)}")
+    render_board()
     movecol = int(input("column: "))
     y = move(movecol, player)
-    render()
-    print(check_win_move(movecol, y, player))
+    if check_win_move(movecol, y, player):
+        break
     player *= -1
+
+render_text(f"Player {player_text(player)} {green}won!{reset}")
