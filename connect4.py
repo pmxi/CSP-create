@@ -1,13 +1,25 @@
 def render_board():
     global board
+    print(f"Player: {player_text(player)}")
+    print("┌" + "───┬"*(6) +"───" + "┐")
+    gridend = 0
     for y in board:
         for x in y:
             if x == 1 or x == -1:
-                print(player_text(x), end=" ")
+                print("│ " + player_text(x), end=" ")
             else:
-                print("-", end=" ")
-        print()
-    print("0 1 2 3 4 5 6")
+                print("│ "+ " ", end=" ")
+        print("│")
+        if gridend < 5:
+            print("├" + "───┼"*6 + "───┤")
+        gridend += 1
+
+    print("└" + "───┴"*(6) +"───" + "┘")
+    print("  0   1   2   3   4   5   6")
+
+#┌─┐
+#│ │
+#└─┘
 
 
 def render_text(text):
@@ -18,9 +30,9 @@ def render_text(text):
 
 def player_text(player_num: int) -> str:
     if player_num == 1:
-        return f"{red}X{reset}"
+        return f"{red}⬤{reset}"
     elif player_num == -1:
-        return f"{yellow}O{reset}"
+        return f"{yellow}⬤{reset}"
 
 
 def move(move: int, player: int) -> int:
@@ -108,7 +120,6 @@ white = "\u001b[37m"
 reset = "\u001b[0m"
 
 while play:
-    print(f"Player: {player_text(player)}")
     render_board()
     movecol = input("column: ")
     while not check_input(movecol, full):
@@ -122,8 +133,8 @@ while play:
     if check_win_move(movecol, y, player):
         break
     player *= -1
-    if not False in full:
-        player = 0
+    if not False in full: # if board full
+        player = 0 
         break
 if player == 0:
     render_text(f"{yellow}It was a tie{reset}")
