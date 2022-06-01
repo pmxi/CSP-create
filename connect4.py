@@ -8,17 +8,20 @@ def render_board():
                 print("-", end=" ")
         print()
     print("0 1 2 3 4 5 6")
-    
+
+
 def render_text(text):
-    print("\n"* 3, end="")
+    print("\n" * 3, end="")
     print(text)
-    print("\n"* 3, end="")
+    print("\n" * 3, end="")
+
 
 def player_text(player_num: int) -> str:
     if player_num == 1:
         return f"{red}X{reset}"
     elif player_num == -1:
         return f"{yellow}O{reset}"
+
 
 def move(move: int, player: int) -> int:
     global board
@@ -30,16 +33,17 @@ def move(move: int, player: int) -> int:
     board[spot][move] = player
     return spot
 
+
 def check_input(text: str, full) -> bool:
     return text.isdecimal() and int(text) in range(7) and not full[int(text)]
-    
+
 
 # check win around a new move because that is the only place a new win can occur
 def check_win_move(movex: int, movey: int, player: int) -> bool:
     global board
     counter = 0
-    #horizontal win
-    for x in range(movex-3,movex+4):
+    # horizontal win
+    for x in range(movex - 3, movex + 4):
         if x in range(7):
             spot = board[movey][x]
             if spot == player:
@@ -48,9 +52,9 @@ def check_win_move(movex: int, movey: int, player: int) -> bool:
                 counter = 0
         if counter > 3:
             return True
-    #vertical win
+    # vertical win
     counter = 0
-    for y in range(movey-3,movey+4):
+    for y in range(movey - 3, movey + 4):
         if y in range(6):
             spot = board[y][movex]
             if spot == player:
@@ -59,10 +63,10 @@ def check_win_move(movex: int, movey: int, player: int) -> bool:
                 counter = 0
         if counter > 3:
             return True
-    #diagonal 1 down
+    # diagonal 1 down
     counter = 0
-    y = movey-3
-    for x in range(movex-3,movex+4):
+    y = movey - 3
+    for x in range(movex - 3, movex + 4):
         if x in range(7) and y in range(6):
             spot = board[y][x]
             if spot == player:
@@ -72,10 +76,10 @@ def check_win_move(movex: int, movey: int, player: int) -> bool:
         if counter > 3:
             return True
         y += 1
-    #diagonal 2 up
+    # diagonal 2 up
     counter = 0
-    y = movey+3
-    for x in range(movex-3,movex+4): # change movey to x
+    y = movey + 3
+    for x in range(movex - 3, movex + 4):  # change movey to x
         if x in range(7) and y in range(6):
             spot = board[y][x]
             if spot == player:
@@ -84,7 +88,8 @@ def check_win_move(movex: int, movey: int, player: int) -> bool:
             return True
         y -= 1
     return False
-    
+
+
 board = [[0] * 7 for i in range(6)]
 full = [False] * 7
 
