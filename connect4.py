@@ -30,27 +30,9 @@ def move(move: int, player: int) -> int:
     board[spot][move] = player
     return spot
 
-
-# def check_win(l: list, player: int) -> bool:
-#     # horizontal check
-#     count = 0
-#     for horizontal in l:
-#         for piece in horizontal:
-#             if piece == player:
-#                 count += 1
-#                 if count >= 4:
-#                     return True
-#             else:
-#                 count = 0
-#     for vertical in range(5):
-#         for piece in horizontal:
-#             if piece == player:
-#                 count += 1
-#                 if count >= 4:
-#                     return True
-#             else:
-#                 count = 0
-#     return False
+def check_input(text: str, full) -> bool:
+    return text.isdecimal() and int(text) in range(7) and not full[int(text)]
+    
 
 # check win around a new move because that is the only place a new win can occur
 def check_win_move(movex: int, movey: int, player: int) -> bool:
@@ -104,6 +86,7 @@ def check_win_move(movex: int, movey: int, player: int) -> bool:
     return False
     
 board = [[0] * 7 for i in range(6)]
+full = [False] * 7
 
 play = True
 player = 1
@@ -123,12 +106,21 @@ while play:
     print(f"Player: {player_text(player)}")
     render_board()
     movecol = input("column: ")
-    while not (movecol.isdecimal() and int(movecol) in range(7)):
+    while not check_input(movecol, full):
         movecol = input("column: ")
     movecol = int(movecol)
     y = move(movecol, player)
+    print("y: ", y)
+    if y == 0:
+        full[movecol] = True
+
     if check_win_move(movecol, y, player):
         break
     player *= -1
-
-render_text(f"Player {player_text(player)} {green}won!{reset}")
+    if not False in full:
+        player = 0
+        break
+if player == 0:
+    render_text(f"{yellow}It was a tie{reset}")
+else:
+    render_text(f"Player {player_text(player)} {green}won!{reset}")
